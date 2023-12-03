@@ -9,6 +9,8 @@ import PlacesAutocomplete, {
     getLatLng,
   } from 'react-places-autocomplete';
 
+import { useRouter } from 'next/navigation';
+
 
 interface Coordinates {
 lat: number;
@@ -16,12 +18,12 @@ lng: number;
 }
 
 const Navbar = ({ toggle }: { toggle: () => void }) => {
-
     const [address, setAddress] = React.useState<string>('');
     const [coordinates, setCoordinates] = React.useState<Coordinates>({
       lat: -12.1219,
       lng: -77.0305,
     });
+    const router = useRouter();
 
     const handleSelect = async (value: string) => {
       const results = await geocodeByAddress(value);
@@ -38,6 +40,14 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
         console.error("No results found for the selected address");
       }
     };
+
+    const onClick = () => {
+      console.log(address);
+      console.log(coordinates);
+
+      if (coordinates) 
+      router.push(`/search?lat=${coordinates['lat']}&lng=${coordinates['lng']}`);
+    }
 
 
   return (
@@ -116,11 +126,11 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
 
               </li>
               <li>
-                <Button text="Buscar"/>
+                <Button text="Buscar" onClick={() => router.push(`/search?lat=${coordinates['lat']}&lng=${coordinates['lng']}`)}/>;
               </li>
             </ul>
             <div className="hidden md:block">
-              <Button text="Sign In"/>
+              <Button text="Sign In" onClick={() => router.push("https://quadra-registros.vercel.app/get_started")}/>
             </div>
           </div>
         </div>
